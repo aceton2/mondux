@@ -1,0 +1,29 @@
+body {
+    margin: 3em;
+    font: 1em sans-serif;
+    background-color: mintcream;
+}
+
+div {
+    margin-top: 0.5em;
+    border-radius: 5px;
+}
+
+#teller {
+    margin: 1em;
+    padding: 0.5em;
+}
+
+#ledger>div {
+    padding: 0.2em;
+    background-color: aquamarine;
+}
+
+#ledger>div:hover {
+    background-color: aliceblue;
+    cursor: pointer;
+}
+
+#teller {
+    background-color: aquamarine;
+}

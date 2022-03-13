@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset=UTF-8>
+    <title>mondu X</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'style.css') }}">
+</head>
+
+<body>
+    <div id="teller">
+        <div> account number
+            <input type="text" id="account">
+            <button onclick="getBalance()"> get balance </button>
+        </div>
+        <div>
+            transfer amount
+            <input type="text" id="transfer" value="0">
+            <button onclick="withdrawFromAccount()"> withdraw </button>
+            <button onclick="depositToAccount()"> deposit </button>
+        </div>
+        <div>
+            balance: <span id="balance"> </span>
+        </div>
+    </div>
+
+    <div id="accounts">
+        <button onclick="createAccount()"> create new account </button>
+        <div id="ledger">
+        </div>
+    </div>
+
+    <script type="text/javascript" src="{{ url_for('static', filename = 'vanilla.js') }}"></script>
+</body>
+
+</html>
