@@ -46,7 +46,7 @@ def get_balance(account_number):
     if len(data) == 1:
         return data[0][2]
     else:
-        return 0
+        return None
 
 
 # run this on start up

@@ -8,6 +8,11 @@ def create_account():
     return account_number
 
 
+def does_account_exist(account_number):
+    balance = db_connect.get_balance(account_number)
+    return False if balance is None else True
+
+
 def get_balance(account_number):
     return db_connect.get_balance(account_number)
 

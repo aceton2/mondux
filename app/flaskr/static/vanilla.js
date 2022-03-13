@@ -8,7 +8,11 @@ function callBackend(method, endpoint) {
             handleResponse(JSON.parse(this.responseText));
         }
         else if (this.readyState == 4) {
-            reportFail(this.status, this.statusText);
+            var des = this.status + ' | ' + this.statusText;
+            try {
+                des = des + ' | ' + JSON.parse(this.response).error
+            } catch (e) { }
+            reportFail(des);
         }
     };
     xhttp.open(method, endpoint, true);
@@ -45,8 +49,8 @@ function onInit() {
     document.getElementById("transfer").value = 50
 }
 
-function reportFail(code, text) {
-    document.getElementById("balance").innerHTML = code + ' | ' + text;
+function reportFail(text) {
+    document.getElementById("balance").innerHTML = text;
 }
 
 function handleResponse(res) {
