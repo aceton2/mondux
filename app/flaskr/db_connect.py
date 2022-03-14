@@ -1,13 +1,11 @@
 from flask import g
+import os
 import psycopg2
 
-# import os
-# os.getenv("db_user")
-
-dbconn = {'database': 'momo3',
-          'user': 'flaskr',
-          'password': 'flaskr',
-          'host': 'pyth-db-1'}
+dbconn = {'database': os.getenv("API_DB"),
+          'user': os.getenv("API_DB_USER"),
+          'password': os.getenv("API_DB_PASSWORD"),
+          'host': os.getenv("API_DB_HOST")}
 
 
 def init_db(app):
