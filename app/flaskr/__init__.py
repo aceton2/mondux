@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 from . import accounts
+from . import db_connect
 
 
 def create_app():
@@ -15,5 +16,8 @@ def create_app():
         return render_template('landing.html')
 
     app.register_blueprint(accounts.bp)
+
+    with app.app_context():
+        db_connect.init_db(app)
 
     return app

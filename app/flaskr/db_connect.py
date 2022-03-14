@@ -1,27 +1,51 @@
+from flask import g
 import psycopg2
 
 # import os
 # os.getenv("db_user")
 
-dbconn = {'database': 'momo2',
-          'user': 'postgres',
-          'password': 'postgres',
+dbconn = {'database': 'momo3',
+          'user': 'flaskr',
+          'password': 'flaskr',
           'host': 'pyth-db-1'}
 
-conn = psycopg2.connect(**dbconn)
-cur = conn.cursor()
+
+def init_db(app):
+    create_table()
+    app.teardown_appcontext(close_db)
 
 
+def get_db():
+    if 'db' not in g:
+        g.db = psycopg2.connect(**dbconn)
+
+    return g.db
+
+
+def close_db(e=None):
+    db = g.pop('db', None)
+    if db is not None:
+        db.close()
+
+
+# FIX THIS
 def run_query(query, data=None):
+    conn = get_db()
+    cur = conn.cursor()
+
     try:
         if data:
             cur.execute(query, data)
         else:
             cur.execute(query)
+
         conn.commit()
+
     except Exception as e:
         conn.rollback()
-        print(e)
+        print('cursor exception', e)
+
+    return cur
 
 
 def create_table():
@@ -40,14 +64,12 @@ def update_balance(account_number, balance):
 
 
 def get_balance(account_number):
-    run_query(
+    cur = run_query(
         "SELECT * FROM accounts WHERE account_number = %s;", (account_number,))
+
     data = cur.fetchall()
+
     if len(data) == 1:
         return data[0][2]
     else:
         return None
-
-
-# run this on start up
-create_table()
