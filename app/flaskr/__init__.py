@@ -1,15 +1,27 @@
+import os
 from flask import Flask, render_template
 from . import accounts
 from . import db_connect
 
 
-def create_app():
+def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
+
+    # Config
+
     app.config.from_mapping(
         SECRET_KEY='dev',
         TEMPLATES_AUTO_RELOAD=True,
-        DATABASE='config vars',
+        DATABASE={
+            'database': os.getenv("API_DB"),
+            'user': os.getenv("API_DB_USER"),
+            'password': os.getenv("API_DB_PASSWORD"),
+            'host': os.getenv("API_DB_HOST")
+        }
     )
+
+    if test_config is not None:
+        app.config.from_mapping(test_config)
 
     @app.route("/")
     def hello():
@@ -17,7 +29,8 @@ def create_app():
 
     app.register_blueprint(accounts.bp)
 
-    with app.app_context():
-        db_connect.init_db(app)
+    if test_config is not None:
+        with app.app_context():
+            db_connect.init_db(app)
 
     return app

@@ -1,5 +1,4 @@
 from flask import Blueprint, request, abort, jsonify
-
 from . import business
 
 bp = Blueprint('accounts', __name__, url_prefix='/api/accounts')

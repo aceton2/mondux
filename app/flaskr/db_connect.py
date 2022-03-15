@@ -1,11 +1,5 @@
-from flask import g
-import os
+from flask import g, current_app
 import psycopg2
-
-dbconn = {'database': os.getenv("API_DB"),
-          'user': os.getenv("API_DB_USER"),
-          'password': os.getenv("API_DB_PASSWORD"),
-          'host': os.getenv("API_DB_HOST")}
 
 
 def init_db(app):
@@ -13,37 +7,26 @@ def init_db(app):
     app.teardown_appcontext(close_db)
 
 
-def get_db():
-    if 'db' not in g:
-        g.db = psycopg2.connect(**dbconn)
+def get_conn():
+    if 'conn' not in g:
+        g.conn = psycopg2.connect(**current_app.config['DATABASE'])
 
-    return g.db
+    return g.conn
 
 
 def close_db(e=None):
-    db = g.pop('db', None)
-    if db is not None:
-        db.close()
+    conn = g.pop('conn', None)
+    if conn is not None:
+        conn.close()
 
 
-# FIX THIS
-def run_query(query, data=None):
-    conn = get_db()
-    cur = conn.cursor()
-
-    try:
-        if data:
-            cur.execute(query, data)
-        else:
-            cur.execute(query)
-
-        conn.commit()
-
-    except Exception as e:
-        conn.rollback()
-        print('cursor exception', e)
-
-    return cur
+def run_query(query, data=None, fetch=False):
+    conn = get_conn()
+    with conn:
+        with conn.cursor() as cursor:
+            cursor.execute(query, data)
+            if fetch:
+                return cursor.fetchall()
 
 
 def create_table():
@@ -62,12 +45,10 @@ def update_balance(account_number, balance):
 
 
 def get_balance(account_number):
-    cur = run_query(
-        "SELECT * FROM accounts WHERE account_number = %s;", (account_number,))
+    data = run_query(
+        "SELECT * FROM accounts WHERE account_number = %s;", (account_number,), True)
 
-    data = cur.fetchall()
-
-    if len(data) == 1:
-        return data[0][2]
-    else:
+    if data is None:
         return None
+    else:
+        return data[0][2]
