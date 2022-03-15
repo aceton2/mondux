@@ -7,7 +7,6 @@ services:
     environment:
       - FLASK_APP=flaskr
       - FLASK_ENV=development
-      - API_DB_HOST=pyth-db-1
     env_file:
       - api_database.env
     ports:
@@ -29,3 +28,6 @@ services:
 volumes:
   db:
     driver: local
+networks:
+  default:
+    name: my-net

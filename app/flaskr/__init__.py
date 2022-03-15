@@ -23,14 +23,19 @@ def create_app(test_config=None):
     if test_config is not None:
         app.config.from_mapping(test_config)
 
+    # Landing Page
+
     @app.route("/")
     def hello():
         return render_template('landing.html')
 
+    # Accounts API
+
     app.register_blueprint(accounts.bp)
 
-    if test_config is not None:
-        with app.app_context():
-            db_connect.init_db(app)
+    # Database Init
+
+    with app.app_context():
+        db_connect.init_db(app)
 
     return app
