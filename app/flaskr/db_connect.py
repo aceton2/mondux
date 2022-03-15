@@ -46,9 +46,9 @@ def update_balance(account_number, balance):
 
 def get_balance(account_number):
     data = run_query(
-        "SELECT * FROM accounts WHERE account_number = %s;", (account_number,), True)
+        "SELECT balance_cents FROM accounts WHERE account_number = %s;", (account_number,), True)
 
-    if data is None:
+    if len(data) == 0:
         return None
     else:
-        return data[0][2]
+        return data[0][0]

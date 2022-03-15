@@ -1,5 +1,4 @@
 import pytest
-import os
 from flaskr import create_app
 
 

@@ -3,10 +3,9 @@ from flaskr import db_connect, business
 
 # MOCKS
 
-# because this function relies on time.time we mock it.
-
 
 def mock_create_account_num():
+    # mocked because it relies on time.time
     return '010'
 
 
