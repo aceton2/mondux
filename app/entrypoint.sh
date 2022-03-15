@@ -7,4 +7,4 @@ done
 
 >&2 echo "Postgres is up - executing command"
 
-flask run -h 0.0.0.0
+exec "$@"

@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  api:
+    command: flask run -h 0.0.0.0
+  db:
+    volumes:
+      - db:/var/lib/postgresql/data
+volumes:
+  db:
+    driver: local

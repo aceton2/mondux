@@ -7,6 +7,7 @@ services:
     environment:
       - FLASK_APP=flaskr
       - FLASK_ENV=development
+      - API_DB_HOST=pyth_db_1
     env_file:
       - api_database.env
     ports:
@@ -24,10 +25,3 @@ services:
       - '5432:5432'
     volumes:
       - ./db/:/docker-entrypoint-initdb.d/
-      - db:/var/lib/postgresql/data
-volumes:
-  db:
-    driver: local
-networks:
-  default:
-    name: my-net

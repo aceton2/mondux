@@ -8,12 +8,6 @@ def app():
 
     app = create_app({
         'TESTING': True,
-        'DATABASE': {
-            'database': os.getenv("API_TEST_DB"),
-            'user': os.getenv("API_DB_USER"),
-            'password': os.getenv("API_DB_PASSWORD"),
-            'host': os.getenv("API_DB_HOST")
-        }
     })
 
     yield app
