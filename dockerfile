@@ -1,5 +1,6 @@
 FROM python:3.6-slim
-RUN pip install flask psycopg2-binary
+COPY requirements.txt /tmp/
+RUN pip install -r /tmp/requirements.txt
 RUN apt-get update && apt-get install -y netcat
 WORKDIR /home/app
 CMD ["python"]
