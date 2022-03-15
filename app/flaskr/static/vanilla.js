@@ -5,14 +5,14 @@ function callBackend(method, endpoint) {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            handleResponse(JSON.parse(this.responseText));
+            updateUI(JSON.parse(this.responseText));
         }
         else if (this.readyState == 4) {
-            var des = this.status + ' | ' + this.statusText;
+            var des = `${this.status} | ${this.statusText}`;
             try {
-                des = des + ' | ' + JSON.parse(this.response).error
+                des = `${des} | ${JSON.parse(this.response).error}`
             } catch (e) { }
-            reportFail(des);
+            setBalance(des);
         }
     };
     xhttp.open(method, endpoint, true);
@@ -22,54 +22,59 @@ function callBackend(method, endpoint) {
 // BACKEND CALLS
 
 function createAccount() {
-    callBackend("POST", "api/accounts/create")
+    const ep = "api/accounts/create";
+    callBackend("POST", ep)
 }
 
-function getBalance() {
-    let endpoint = "api/accounts/" + document.getElementById("account").value + "/balance";
-    callBackend("GET", endpoint)
+function fetchBalance() {
+    const ep = `api/accounts/${getAccountNumber()}/balance`;
+    callBackend("GET", ep)
 }
 
 function depositToAccount() {
-    let endpoint = "api/accounts/" + document.getElementById("account").value + "/deposit?sum=" +
-        document.getElementById("transfer").value;
-    callBackend("PUT", endpoint)
+    const ep = `api/accounts/${getAccountNumber()}/deposit?sum=${getTransferSum()}`;
+    callBackend("PUT", ep)
 }
 
 function withdrawFromAccount() {
-    let endpoint = "api/accounts/" + document.getElementById("account").value + "/withdraw?sum=" +
-        document.getElementById("transfer").value;
-    callBackend("PUT", endpoint)
+    const ep = `api/accounts/${getAccountNumber()}/withdraw?sum=${getTransferSum()}`;
+    callBackend("PUT", ep)
 }
 
 // DOM MANIPULATIONS
 
 function onInit() {
-    document.getElementById("account").value = '';
-    document.getElementById("transfer").value = 50
+    setAccount('');
+    setTransfer(50);
 }
 
-function reportFail(text) {
-    document.getElementById("balance").innerHTML = text;
-}
-
-function handleResponse(res) {
-    document.getElementById("balance").innerHTML = !isNaN(res.balance) ? res.balance : '-';
+function updateUI(res) {
+    this.setBalance(!isNaN(res.balance) ? res.balance : '-');
     if (res.account_number) {
-        document.getElementById("account").value = res.account_number;
-        appendCreated(res.account_number)
+        setAccount(res.account_number);
+        appendNewAccount(res.account_number)
 
     }
 }
 
-function appendCreated(account_number) {
+function appendNewAccount(account_number) {
     const node = document.createElement("div");
     node.innerHTML = account_number;
     node.onclick = function () {
-        document.getElementById("account").value = account_number;
-        getBalance();
+        setAccount(account_number);
+        fetchBalance();
     }
-    document.getElementById("ledger").appendChild(node)
+    getLedgerListDiv().appendChild(node)
 }
+
+// DOM GETTERS AND SETTERS
+
+function getAccountNumber() { return document.getElementById("account").value; }
+function getTransferSum() { return document.getElementById("transfer").value; }
+function getLedgerListDiv() { return document.getElementById("ledger"); }
+
+function setAccount(value) { document.getElementById("account").value = value; }
+function setBalance(value) { document.getElementById("balance").innerHTML = value; }
+function setTransfer(value) { document.getElementById("transfer").value = value; }
 
 onInit();
