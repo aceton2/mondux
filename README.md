@@ -2,7 +2,7 @@
 
 Simple Flask app created for _Mondu Coding Challenge_.
 
-It runs in a docker container exposed on localhost port 5000It implements the 4 required endpoints
+It runs in a docker container exposed on `localhost:5000` and implements the 4 required endpoints:
 
 - Create an account
 - Deposit money on a specific account
@@ -48,23 +48,20 @@ Rather then using mysqlite3 as in the official tutorials I chose postgres as a b
 On the other hand, for simplicities sake, I implemented `psycopg2` directly, rather than using a ORM like `SQLAlchemy`. This would possibly change in further development.
 
 ### App Architecture
-Seperation of concerns here is simple: a controller layer, and a business logic layer, a database connection layer. In the case of this app these are represented by single classes
+Seperation of concerns here is simple: a controller layer, and a business logic layer, a database connection layer. In the case of this app these are represented by modules residing in a single file.
 
-Controller - `accounts.py` which binds into the main app as a `Blueprint`
-Business - `business.py` which is responsible for the business logic regarding accounts
-Database - `db_connect.py` which handles requests to the database
+- Controller - `accounts.py` which binds into the main app as a `Blueprint`
+- Business - `business.py` which is responsible for the business logic regarding accounts
+- Database - `db_connect.py` which handles requests to the database
 
-Note: Queries are written directly in the `db_connect` class. In subsequent developements this would be refactored.
 
 ##### Database
 
-The database contains a single table `accounts`. Fields are `id`, `account_number`, `balance_cents`. A minimal setup for the requested functionality.
-
-Note: balance is in cents to avoid floating points.
+The database contains a single table `accounts`. Fields are `id`, `account_number`, `balance_cents`. A minimal setup for the requested functionality. Balance is in cents to avoid floating points.
 
 ### Docker
 
-The image used for the Flask application is built on `python:3.6-slim` and subsequently installs python dependencies for this project via `requirements.txt`. One additional dependency is installed: `netcat` to handle scanning for the `postgres` service before starting the web app.
+The image used for the Flask application is built on `python:3.6-slim` and subsequently installs python dependencies for this project via `requirements.txt`. One additional dependency is installed: `netcat` to handle scanning for the `postgres` service before starting `mondux`.
 
 Since development was exclusively in containers, for flexibility I implemented an `extends` pattern allowing for different setups when running the containers.
 
@@ -82,61 +79,64 @@ Further steps here would be to create `db-prod.yaml`. For a local deployment thi
 ## API Documentation
 Responses are all in JSON format.
 
-__Create Account__
-_creates a new account_ 
+--- 
+Create: _creates a new account_ 
 ```
 /api/accounts/create
 ```
 ```
 response: {
-    balance: 0
+    "account_number": "{account_number}"
 }
 ```
 
-__Deposit to Account__
-_deposits transfer sum to the specified account and returns new balance_
+---
+Deposit: _deposits transfer sum to the specified account and returns new balance_
 ```
 /api/accounts/{account_number}/deposit?sum={transfer_sum}
 ```
 ```
 response: {
-    balance: 0
+    "balance": 0
 }
 ```
 `account_number` __required__
 `transfer_sum` __required__
 
-__Withdraw from Account__
-_withdraws transfer sum from the specified account and returns new balance_
+---
+Withdraw: _withdraws transfer sum from the specified account and returns new balance_
 ```
 /api/accounts/{account_number}/withdraw?sum={transfer_sum}
 ```
 ```
 response: {
-    balance: 10
+    "balance": 10
 }
 ```
 `account_number` __required__
 `transfer_sum` __required__
 
-__Get Balance__
-_returns balance for the specified account_
+---
+Get Balance: _returns balance for the specified account_
 ```
 /api/accounts/{account_number}/balance
 ```
 ```
 response: {
-    balance: 10
+    "balance": 10
 }
 ```
 `account_number` __required__
+
 
 ### Error handling
 
 The API will explicitly return errors regarding non-existent accounts as `404`, and transfer sums that cannot be parsed to an integer as `400`. The response will return the corresponding error code, as well as a JSON with an error message.
 
-```json
- {error: error message here}
+```
+response: {
+    "error": "{error message}"
+}
 ```
 
 If no account number is provided the API will return a `404` without additional error description.
@@ -145,5 +145,5 @@ If no account number is provided the API will return a `404` without additional 
 
 - Testing the database could be more thorough.
 - ORM implementation is probably advised.
-- Seperation of concerns: DB connect vs Query definitions.
+- Seperation of concerns: Queries are written directly in the `db_connect` class. In subsequent developements this would be refactored.
 
