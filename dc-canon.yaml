@@ -1,12 +1,11 @@
 version: '3.8'
 services:
-  api:
+  web:
     build: .
     image: flask:demo
     entrypoint: ./entrypoint.sh
     environment:
-      - FLASK_APP=flaskr
-      - FLASK_ENV=development
+      - FLASK_APP=mondux
       - API_DB_HOST=pyth_db_1
     env_file:
       - api_database.env

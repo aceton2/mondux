@@ -1,5 +1,5 @@
 import pytest
-from flaskr import db_connect, business
+from mondux import db_connect, business
 
 # MOCKS
 

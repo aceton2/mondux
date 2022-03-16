@@ -1,4 +1,4 @@
-from flaskr import db_connect
+from mondux import db_connect
 
 
 def test_single_db_connection(app):
