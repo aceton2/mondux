@@ -2,7 +2,7 @@ version: '3.8'
 services:
   web:
     build: .
-    image: flask:demo
+    image: modux:demo
     entrypoint: ./entrypoint.sh
     environment:
       - FLASK_APP=mondux

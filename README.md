@@ -1,6 +1,6 @@
-# Mondu X
+[CODING CHALLENGE FROM MARCH22]
 
-Simple Flask app created for _Mondu Coding Challenge_.
+Simple Flask app created for _XXXX Coding Challenge_.
 
 It runs in a docker container exposed on `localhost:5000` and implements the 4 required endpoints:
 
@@ -39,21 +39,15 @@ This command will handle the neccesary container setup, init a _temporary_ postg
 
 Note: after the tests have run the database container will still be running. You will need to run ```docker-compose down``` to clean up. This is not ideal and should be refactored.
 
-## Description
-### Stack
-For this challenge I chose Flask because 1) my familiarity with python vs go or ruby 2) Flask is lightweight and relatively simple to get started with, making it a good fit for a challenge like this.
-
-Rather then using mysqlite3 as in the official tutorials I chose postgres as a backend since it is a more realistic database for banking.
-
-On the other hand, for simplicities sake, I implemented `psycopg2` directly, rather than using a ORM like `SQLAlchemy`. This would possibly change in further development.
-
 ### App Architecture
+
 Seperation of concerns here is simple: a controller layer, and a business logic layer, a database connection layer. In the case of this app these are represented by modules residing in a single file.
 
 - Controller - `accounts.py` which binds into the main app as a `Blueprint`
 - Business - `business.py` which is responsible for the business logic regarding accounts
 - Database - `db_connect.py` which handles requests to the database
 
+Connection to the postgres DB is, for simplicities sake, implemented with `psycopg2` directly, rather than using a ORM like `SQLAlchemy`. This would possibly change in further development.
 
 ##### Database
 
